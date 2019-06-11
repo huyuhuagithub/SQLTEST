@@ -123,6 +123,7 @@ namespace SQLTEST
 
         private void QueryList()
         {
+            dataGridView1.Rows.Clear();
             var userss = SQLHelper.GetEntitylist<users>();
             foreach (var item in userss)
             {
