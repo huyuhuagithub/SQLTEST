@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
-using System.Data.SqlClient;
+//using System.Data.SqlClient;
+
+using System.Data.OleDb;
 using System.Configuration;
 namespace SQLTEST
 {
-    public class SQLHelper
+    public class OLEDBHelper
     {
-        static string connstring = ConfigurationManager.ConnectionStrings["connstring"].ConnectionString;
+        static string connstring = ConfigurationManager.ConnectionStrings["oledbconnstring"].ConnectionString;
 
         /// <summary>
         /// 获取实体单行数据
@@ -24,11 +26,11 @@ namespace SQLTEST
             object obj = Activator.CreateInstance(type);
             string colums = string.Join(",", type.GetProperties().Select(p => string.Format($"[{p.Name}]")));
             string sql = string.Format($"SELECT {colums} FROM {type.Name} where id={id}");
-            using (SqlConnection conn = new SqlConnection(connstring))
+            using (OleDbConnection conn = new OleDbConnection(connstring))
             {
-                SqlCommand command = new SqlCommand(sql, conn);
+                OleDbCommand command = new OleDbCommand(sql, conn);
                 conn.Open();
-                SqlDataReader reader = command.ExecuteReader();
+                OleDbDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
                     foreach (var item in type.GetProperties())
@@ -55,11 +57,11 @@ namespace SQLTEST
             string cloumsstring = string.Join(",", type.GetProperties().Select(p => string.Format($"[{p.Name}]")));
             string sqlString = string.Format($"select {cloumsstring} from {type.Name}");
             List<T> datalist = new List<T>();
-            using (SqlConnection conn = new SqlConnection(connstring))
+            using (OleDbConnection conn = new OleDbConnection(connstring))
             {
                 conn.Open();
-                SqlCommand command = new SqlCommand(sqlString, conn);
-                SqlDataReader read = command.ExecuteReader();
+                OleDbCommand command = new OleDbCommand(sqlString, conn);
+                OleDbDataReader read = command.ExecuteReader();
                 while (read.Read())
                 {
                     var t = Activator.CreateInstance(type);
@@ -93,12 +95,12 @@ namespace SQLTEST
 
 
             string sqlText = $"insert into [{type.Name}] ({columnString}) values({valueString})";
-            using (SqlConnection conn = new SqlConnection(connstring))
+            using (OleDbConnection conn = new OleDbConnection(connstring))
             {
                 conn.Open();
-                SqlCommand command = new SqlCommand(sqlText, conn);
-                SqlParameter[] sqlParameter = type.GetProperties().Where(p => !"id".Equals(p.Name)).
-                    Select(p => new SqlParameter(string.Format($"@{p.Name}"), p.GetValue(t) ?? DBNull.Value)).ToArray();
+                OleDbCommand command = new OleDbCommand(sqlText, conn);
+                OleDbParameter[] sqlParameter = type.GetProperties().Where(p => !"id".Equals(p.Name)).
+                    Select(p => new OleDbParameter(string.Format($"@{p.Name}"), p.GetValue(t) ?? DBNull.Value)).ToArray();
                 command.Parameters.AddRange(sqlParameter);
                 return command.ExecuteNonQuery() > 0;
             }
@@ -115,10 +117,10 @@ namespace SQLTEST
         {
             Type type = typeof(T);
             string sqlText = string.Format($"Delete from [{type.Name}] where id={id}");
-            using (SqlConnection conn = new SqlConnection(connstring))
+            using (OleDbConnection conn = new OleDbConnection(connstring))
             {
                 conn.Open();
-                SqlCommand sqlCommand = new SqlCommand(sqlText, conn);
+                OleDbCommand sqlCommand = new OleDbCommand(sqlText, conn);
                 return sqlCommand.ExecuteNonQuery() > 0;
             }
         }
@@ -136,12 +138,12 @@ namespace SQLTEST
 
             string columnString = string.Join(",", type.GetProperties().Where(p => p.Name != "id").Select(p => string.Format($"[{p.Name}]=@{p.Name}")));
             //string valueString = string.Join(",", type.GetProperties()/*.Where(p => p.Name != "id")*/.Select(p => string.Format($"[{p.GetValue(t)}]")));
-            var parameters = propArray.Select(p => new SqlParameter($"@{p.Name}", p.GetValue(t) ?? DBNull.Value)).ToArray();
+            var parameters = propArray.Select(p => new OleDbParameter($"@{p.Name}", p.GetValue(t) ?? DBNull.Value)).ToArray();
             string sql = string.Format($"Update [{type.Name}] set {columnString} where id={t.id}");
 
-            using (SqlConnection conn = new SqlConnection(connstring))
+            using (OleDbConnection conn = new OleDbConnection(connstring))
             {
-                SqlCommand command = new SqlCommand(sql, conn);
+                OleDbCommand command = new OleDbCommand(sql, conn);
                 command.Parameters.AddRange(parameters);
                 conn.Open();
                 int iResult = command.ExecuteNonQuery();
@@ -154,7 +156,7 @@ namespace SQLTEST
 
         private W Dbcommand<T, W>(string strSql, Func<IDbCommand, W> func) where T : BaseModel
         {
-            using (IDbConnection conn = new SqlConnection(connstring))
+            using (IDbConnection conn = new OleDbConnection(connstring))
             {
                 //1:打开数据库连接
                 conn.Open();

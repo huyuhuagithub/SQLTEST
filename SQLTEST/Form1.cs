@@ -130,5 +130,31 @@ namespace SQLTEST
                 dataGridView1.Rows.Add(item.id, item.Account, item.Password, item.Permission);
             }
         }
+
+        private void Button6_Click(object sender, EventArgs e)
+        {
+
+            dataGridView1.Rows.Clear();
+            var userss = OLEDBHelper.GetEntitylist<users>();
+            foreach (var item in userss)
+            {
+                dataGridView1.Rows.Add(item.id, item.Account, item.Password, item.Permission);
+            }
+            //users users1 = new users();
+            //users1.id = int.Parse(textBox2.Text);
+            //users1.Account = textBox3.Text;
+            //users1.Password = textBox4.Text;
+            //users1.Permission = bool.Parse(textBox5.Text);
+            //OLEDBHelper.InsertEntity(users1);
+
+            //users users1 = new users();
+            //users1.id = int.Parse(textBox2.Text);
+            //users1.Account = textBox3.Text;
+            //users1.Password = textBox4.Text;
+            //users1.Permission = bool.Parse(textBox5.Text);
+            //OLEDBHelper.UpdateEntity(users1);
+
+
+        }
     }
 }

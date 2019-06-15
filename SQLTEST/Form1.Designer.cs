@@ -46,8 +46,9 @@
             this.Account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PassWord = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Permission = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.usersBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.usersBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.usersBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -68,7 +69,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 21);
             this.textBox2.TabIndex = 2;
-            this.textBox2.Text = "1007";
+            this.textBox2.Text = "1";
             // 
             // textBox3
             // 
@@ -196,10 +197,6 @@
             this.Permission.HeaderText = "Permission";
             this.Permission.Name = "Permission";
             // 
-            // usersBindingSource
-            // 
-            this.usersBindingSource.DataSource = typeof(SQLTEST.users);
-            // 
             // button5
             // 
             this.button5.Location = new System.Drawing.Point(683, 191);
@@ -210,11 +207,26 @@
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.Button5_Click);
             // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(683, 114);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 9;
+            this.button6.Text = "OLEDBQuery";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.Button6_Click);
+            // 
+            // usersBindingSource
+            // 
+            this.usersBindingSource.DataSource = typeof(SQLTEST.users);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 453);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button4);
@@ -259,6 +271,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn PassWord;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Permission;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
     }
 }
 
